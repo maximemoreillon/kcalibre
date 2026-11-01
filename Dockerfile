@@ -22,6 +22,10 @@ RUN npm run build
 FROM node:22-alpine
 WORKDIR /app
 
+# Set by CI from the git tag (e.g. v2.0.1), exposed as runtimeConfig.public.appVersion
+ARG APP_VERSION=dev
+ENV NUXT_PUBLIC_APP_VERSION=${APP_VERSION}
+
 # Only `.output` folder is needed from the build stage
 COPY --from=build /app/.output/ ./
 

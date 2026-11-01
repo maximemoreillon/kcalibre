@@ -38,6 +38,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       authRequired: false,
+      appVersion: "dev",
     },
     oauth: {
       oidc: {

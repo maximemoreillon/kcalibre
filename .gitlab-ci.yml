@@ -2,10 +2,16 @@ stages:
   - build
   - deploy
 
+# Pipelines only run for release tags (vX.Y.Z), created in the GitLab UI (Code > Tags)
+workflow:
+  rules:
+    - if: $CI_COMMIT_TAG =~ /^v\d+\.\d+\.\d+$/
+
 variables:
   APPLICATION_NAME: food-manager
   CONTAINER_IMAGE: ${DOCKER_HUB_USERNAME}/${APPLICATION_NAME}
-  CONTAINER_IMAGE_TAGGED: ${CONTAINER_IMAGE}:${CI_COMMIT_SHORT_SHA}
+  CONTAINER_IMAGE_TAGGED: ${CONTAINER_IMAGE}:${CI_COMMIT_TAG}
+  KUBECTL_CONTEXT: moreillon_ci/moreillon_k8s_home/kubernetes-agent:home-talos
 
 image: moreillon/ci-dind
 services:
@@ -13,19 +19,16 @@ services:
 
 build:
   stage: build
-  only:
-    - master
   before_script:
     - echo "${DOCKER_HUB_PASSWORD}" | docker login --username ${DOCKER_HUB_USERNAME} --password-stdin
   script:
-    - docker build -t ${CONTAINER_IMAGE_TAGGED} .
+    - docker build --build-arg APP_VERSION=${CI_COMMIT_TAG} -t ${CONTAINER_IMAGE_TAGGED} -t ${CONTAINER_IMAGE}:latest .
     - docker push ${CONTAINER_IMAGE_TAGGED}
+    - docker push ${CONTAINER_IMAGE}:latest
 
 deploy:
   stage: deploy
-  only:
-    - master
-  before_script:
-    - kubectl config use-context moreillon_ci/moreillon_k8s_home/kubernetes-agent:home-talos
   script:
-    - envsubst < kubernetes_manifest.yml | kubectl apply -n ${KUBERNETES_NAMESPACE} -f -
+    - kubectl config use-context ${KUBECTL_CONTEXT}
+    - kubectl config set-context --current --namespace=${KUBERNETES_NAMESPACE}
+    - envsubst < kubernetes_manifest.yml | kubectl apply -f -

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useTheme } from "vuetify";
-// import { version } from "~~/package.json";
+const { appVersion } = useRuntimeConfig().public;
 const theme = useTheme();
 
 const drawer = ref<boolean | null>(null);
@@ -38,9 +38,9 @@ const { snackbar } = useSnackbar();
           prepend-icon="mdi-cogs"
         />
       </v-list>
-      <!-- <template v-slot:append>
-        <div class="pa-2">v{{ version }}</div>
-      </template> -->
+      <template v-slot:append>
+        <div class="pa-2 text-caption">{{ appVersion }}</div>
+      </template>
     </v-navigation-drawer>
     <v-main>
       <v-container>
