@@ -61,4 +61,4 @@ API_KEY_MANAGER_URL            # Base URL of api-key-manager, e.g. https://api-k
 ```
 
 ### Deployment
-Multi-stage Docker build (Node 22-alpine), deployed to Kubernetes via GitLab CI. Releases are triggered by creating a `vX.Y.Z` tag in the GitLab UI; the tag is the only source of the app version (passed as `APP_VERSION` → `runtimeConfig.public.appVersion`), so `package.json` deliberately has no `version` field. ExternalSecrets syncs credentials from Vault every 5 minutes. Ingress hostname: `food.home.maximemoreillon.com`.
+Multi-stage Docker build (Node 22-alpine) via GitLab CI. Every push to `master` builds an image tagged with the short commit SHA and deploys it to Kubernetes. Creating a `vX.Y.Z` tag in the GitLab UI runs only a release job, which promotes that commit's existing image to `:vX.Y.Z` and `:latest` (no rebuild, no deploy). The tag is the only source of the app version (`NUXT_PUBLIC_APP_VERSION` → `runtimeConfig.public.appVersion`; master builds show the SHA), so `package.json` deliberately has no `version` field. ExternalSecrets syncs credentials from Vault every 5 minutes. Ingress hostname: `food.home.maximemoreillon.com`.
