@@ -54,6 +54,6 @@ function exportCsv() {
   const date = props.log.date
     ? new Date(props.log.date).toISOString().split("T")[0]
     : undefined;
-  downloadCsv(date ? `food-manager-${date}.csv` : "food-manager.csv", csv);
+  downloadCsv(date ? `kcalibre-${date}.csv` : "kcalibre.csv", csv);
 }
 </script>

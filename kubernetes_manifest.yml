@@ -81,7 +81,7 @@ metadata:
   name: food-manager
   annotations:
     gethomepage.dev/enabled: "true"
-    gethomepage.dev/name: Food manager
+    gethomepage.dev/name: Kcalibre
     gethomepage.dev/icon: mdi-food
     gethomepage.dev/group: 1P
 spec:

@@ -15,7 +15,7 @@ const { snackbar } = useSnackbar();
       <template v-slot:prepend v-if="loggedIn">
         <v-app-bar-nav-icon @click="drawer = !drawer" />
       </template>
-      <v-app-bar-title>Food manager</v-app-bar-title>
+      <v-app-bar-title>Kcalibre</v-app-bar-title>
       <template v-slot:append>
         <!-- TODO: theme is not saved -->
         <v-btn @click="theme.toggle()" icon="mdi-theme-light-dark" />
