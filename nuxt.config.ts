@@ -10,6 +10,10 @@ export default defineNuxtConfig({
   app: {
     head: {
       title: "Food manager",
+      link: [
+        { rel: "icon", href: "/favicon.ico", sizes: "any" },
+        { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
+      ],
     },
   },
   modules: [
