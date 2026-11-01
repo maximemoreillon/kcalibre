@@ -4,7 +4,7 @@ stages:
   - release
 
 variables:
-  APPLICATION_NAME: food-manager
+  APPLICATION_NAME: kcalibre
   CONTAINER_IMAGE: ${DOCKER_HUB_USERNAME}/${APPLICATION_NAME}
   # Every master push is built and deployed under its commit SHA
   CONTAINER_IMAGE_TAGGED: ${CONTAINER_IMAGE}:${CI_COMMIT_SHORT_SHA}
