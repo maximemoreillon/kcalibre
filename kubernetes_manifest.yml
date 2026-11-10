@@ -26,10 +26,6 @@ spec:
               value: "7070"
             - name: NUXT_PUBLIC_AUTH_REQUIRED
               value: "true"
-            # Pinned because Envoy rewrites X-Forwarded-Proto to http for Cloudflare traffic,
-            # which made the auto-derived redirect_uri http://...
-            - name: NUXT_OAUTH_OIDC_REDIRECT_URL
-              value: https://food.maximemoreillon.com/auth/oidc
             - name: NUXT_API_KEY_MANAGER_URL
               value: https://api-key-manager.home.maximemoreillon.com
           envFrom:
@@ -100,6 +96,17 @@ spec:
       name: eg
       namespace: envoy-gateway-system
   rules:
-    - backendRefs:
+    # cloudflared reaches the .com hostnames through the plain http listener,
+    # where Envoy sets X-Forwarded-Proto to "http", so the app built an http://
+    # OIDC redirect_uri. Cloudflare only serves these hosts over HTTPS, and on
+    # the https listener Envoy already sets the same value. Same approach as
+    # keycloak/httproute.yml in the cluster repo.
+    - filters:
+        - type: RequestHeaderModifier
+          requestHeaderModifier:
+            set:
+              - name: X-Forwarded-Proto
+                value: https
+      backendRefs:
         - name: food-manager
           port: 80
